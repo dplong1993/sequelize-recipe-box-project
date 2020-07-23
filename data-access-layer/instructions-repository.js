@@ -28,9 +28,25 @@ async function createNewInstruction(specification, recipeId) {
   // return it using the maximum listOrder from the query just before this.
   //
   // Docs: https://sequelize.org/v5/manual/instances.html#creating-persistent-instances
+  const instructions = await Instruction.findAll({
+    where:{
+      recipeId: recipeId
+    }
+  })
+  let maxListOrder = 0;
+  instructions.forEach(el =>{
+    if(el.dataValues.listOrder > maxListOrder) maxListOrder = el.dataValues.listOrder;
+  });
+  console.log(maxListOrder);
+  const instruction = await Instruction.create({
+    specification: specification,
+    listOrder: maxListOrder+1,
+    recipeId: recipeId
+  });
+  return instruction;
 }
 
-
+// createNewInstruction('asd', 9);
 
 /* Don't change code below this line ******************************************/
 module.exports = {
